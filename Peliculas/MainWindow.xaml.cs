@@ -44,9 +44,12 @@ namespace Peliculas
             getSamples();
             //lista.Add(new Pelicula("Fast Furious 9", "A todo gas 9", "Media", "Acción", "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/fast-and-furious-9-poster-1580411801.jpeg"));
             //lista.Add(new Pelicula("Animales Fantásticos", "Los crímenes de Grindelwald", "Media", "Acción", "https://pics.filmaffinity.com/Animales_fant_sticos_Los_cr_menes_de_Grindelwald-693286072-large.jpg"));
+            actualTextBlock.Text = "1";
+            totalTextBlock.Text = lista.Count.ToString();
             peliculasListBox.DataContext = lista;
             generoComboBox.ItemsSource = Enum.GetValues(typeof(Generos));
             dificultadComboBox.ItemsSource = Enum.GetValues(typeof(Dificultad));
+            contenedorJuego.DataContext = lista;
         }
 
         private void getSamples()
@@ -57,14 +60,6 @@ namespace Peliculas
                 lista = JsonConvert.DeserializeObject<ObservableCollection<Pelicula>>(json);
             }
             peliculasListBox.DataContext = lista;
-
-            //
-            //
-            //      ARRREGLA ESTA CHAPUZA
-            //
-            //
-
-            peliculasListBox.SelectedItem = lista[0];
         }
 
         private void cargarJSONButton_Click(object sender, RoutedEventArgs e)
@@ -134,6 +129,26 @@ namespace Peliculas
         private void deseleccionarPeliculaButton_Click(object sender, RoutedEventArgs e)
         {
             peliculasListBox.UnselectAll();
+        }
+
+        private void anteriorImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            int actual = int.Parse(actualTextBlock.Text);
+            if (actual > 1)
+            {
+                contenedorJuego.DataContext = lista[actual - 2];
+                actualTextBlock.Text = (actual - 1).ToString();
+            }
+        }
+
+        private void siguienteImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            int actual = int.Parse(actualTextBlock.Text);
+            if (actual < lista.Count)
+            {
+                contenedorJuego.DataContext = lista[actual];
+                actualTextBlock.Text = (actual + 1).ToString();
+            }
         }
     }
 }

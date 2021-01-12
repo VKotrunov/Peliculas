@@ -20,6 +20,18 @@
                     Value="10,5,10,5" />
         </Style>
 
+        <Style x:Key="paginacionTextBlock"
+               TargetType="TextBlock">
+            <Setter Property="VerticalAlignment"
+                    Value="Center" />
+            <Setter Property="Margin"
+                    Value="10,5,0,5" />
+            <Setter Property="FontWeight"
+                    Value="Bold" />
+            <Setter Property="FontSize"
+                    Value="20" />
+        </Style>
+
         <Style TargetType="TextBox">
             <Setter Property="VerticalContentAlignment"
                     Value="Center" />
@@ -156,17 +168,29 @@
     </Window.Resources>
     <Grid>
         <TabControl Margin="10">
-            <TabItem Header="Jugar"
-                     DataContext="{Binding}">
-                <DockPanel Background="YellowGreen">
+            <TabItem Header="Jugar">
+                <DockPanel Background="YellowGreen" x:Name="contenedorJuego">
                     <StackPanel Orientation="Horizontal"
                                 DockPanel.Dock="Bottom"
                                 HorizontalAlignment="Center">
-                        <Image Source="arrow.png"
+                        <Image x:Name="anteriorImage"
+                               MouseLeftButtonUp="anteriorImage_MouseLeftButtonUp"
+                               Source="arrow.png"
                                Style="{StaticResource flecha}" />
-                        <TextBlock Text="1 / 7"
-                                   VerticalAlignment="Center" />
-                        <Image Source="arrow.png"
+                        <TextBlock x:Name="actualTextBlock"
+                                   Text="1"
+                                   VerticalAlignment="Center"
+                                   Style="{StaticResource paginacionTextBlock}" />
+                        <TextBlock Text="/"
+                                   VerticalAlignment="Center"
+                                   Style="{StaticResource paginacionTextBlock}" />
+                        <TextBlock x:Name="totalTextBlock"
+                                   Text="7"
+                                   VerticalAlignment="Center"
+                                   Style="{StaticResource paginacionTextBlock}" />
+                        <Image x:Name="siguienteImage"
+                               MouseLeftButtonUp="siguienteImage_MouseLeftButtonUp"
+                               Source="arrow.png"
                                Style="{StaticResource flecha}"
                                RenderTransformOrigin="0.5,0.5">
                             <Image.RenderTransform>
