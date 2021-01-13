@@ -26,6 +26,7 @@ namespace Peliculas
     {
         OpenFileDialog ofd;
         ObservableCollection<Pelicula> lista;
+        Juego j;
         enum Generos
         {
             Comedia, Drama, Acción, Terror, CienciaFicción
@@ -142,6 +143,9 @@ namespace Peliculas
             {
                 contenedorJuego.DataContext = lista[actual - 2];
                 actualTextBlock.Text = (actual - 1).ToString();
+                textoPistaTextBlock.Visibility = Visibility.Hidden;
+                pistaCheckBox.IsChecked = false;
+                pistaCheckBox.IsEnabled = true;
             }
         }
 
@@ -152,12 +156,29 @@ namespace Peliculas
             {
                 contenedorJuego.DataContext = lista[actual];
                 actualTextBlock.Text = (actual + 1).ToString();
+                textoPistaTextBlock.Visibility = Visibility.Hidden;
+                pistaCheckBox.IsChecked = false;
+                pistaCheckBox.IsEnabled = true;
             }
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             textoPistaTextBlock.Visibility = Visibility.Visible;
+            pistaCheckBox.IsEnabled = false;
+        }
+
+        private void nuevaPartidaButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (lista.Count < 5)
+                MessageBox.Show("No se puede empezar partida hasta tener al menos 5 películas", "Información", MessageBoxButton.OK, MessageBoxImage.Information);
+            else 
+            {
+                MessageBox.Show("¡EMPIEZA LA PARTIDA!", "Información", MessageBoxButton.OK, MessageBoxImage.None);
+                j = new Juego(lista);
+                j.EmpiezaJuego();
+                puntosTextBlock.Text = j.GetPuntuacion();
+            }
         }
     }
 }

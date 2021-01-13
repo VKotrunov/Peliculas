@@ -36,6 +36,14 @@
                     Value="Center" />
         </Style>
 
+        <Style TargetType="TextBlock"
+               x:Key="textoGestionTextBlock">
+            <Setter Property="VerticalAlignment"
+                    Value="Center" />
+            <Setter Property="Margin"
+                    Value="10,5,10,5" />
+        </Style>
+        
         <Style x:Key="paginacionTextBlock"
                TargetType="TextBlock"
                BasedOn="{StaticResource estiloTextoJuego}">
@@ -289,13 +297,16 @@
                                          Height="100"
                                          Stretch="Uniform"
                                          Margin="100,5,30,10">
-                                    <TextBlock Text="99000"
+                                    <TextBlock x:Name="puntosTextBlock"
+                                               Text="999"
                                                Foreground="Cyan" />
                                 </Viewbox>
-                                <Button Content="Nueva partida"
+                                <Button x:Name="nuevaPartidaButton"
+                                        Content="Nueva partida"
                                         VerticalAlignment="Top"
                                         Margin="10,50,10,10"
-                                        Style="{StaticResource estiloButton}" />
+                                        Style="{StaticResource estiloButton}"
+                                        Click="nuevaPartidaButton_Click" />
                             </StackPanel>
                             <TextBlock Text="Título de la película"
                                        Margin="30,10,10,0"
@@ -308,7 +319,8 @@
                                 <Button Content="Validar"
                                         Style="{StaticResource estiloButton}" />
                             </StackPanel>
-                            <CheckBox Content="Ver Pista"
+                            <CheckBox x:Name="pistaCheckBox"
+                                      Content="Ver Pista"
                                       Margin="30,10,10,10"
                                       Foreground="White"
                                       FontWeight="Bold"
@@ -390,19 +402,19 @@
                         <TextBlock Grid.Column="0"
                                    Grid.Row="0"
                                    Text="Título de la película"
-                                   Style="{StaticResource etiquetasTextBlock}" />
+                                   Style="{StaticResource textoGestionTextBlock}" />
                         <TextBlock Grid.Column="0"
                                    Grid.Row="1"
                                    Text="Pista de la película"
-                                   Style="{StaticResource etiquetasTextBlock}" />
+                                   Style="{StaticResource textoGestionTextBlock}" />
                         <TextBlock Grid.Column="0"
                                    Grid.Row="2"
                                    Text="Imagen de la película"
-                                   Style="{StaticResource etiquetasTextBlock}" />
+                                   Style="{StaticResource textoGestionTextBlock}" />
                         <TextBlock Grid.Column="0"
                                    Grid.Row="3"
                                    Text="Nivel de dificultad"
-                                   Style="{StaticResource etiquetasTextBlock}" />
+                                   Style="{StaticResource textoGestionTextBlock}" />
                         <TextBox x:Name="tituloTextBox"
                                  Text="{Binding Path=Titulo}"
                                  Grid.Column="1"
@@ -427,7 +439,7 @@
                         <TextBlock Text="Género"
                                    Grid.Column="2"
                                    Grid.Row="3"
-                                   Style="{StaticResource etiquetasTextBlock}"
+                                   Style="{StaticResource textoGestionTextBlock}"
                                    HorizontalAlignment="Right" />
                         <ComboBox x:Name="generoComboBox"
                                   SelectedItem="{Binding Genero}"
