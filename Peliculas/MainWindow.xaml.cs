@@ -42,8 +42,6 @@ namespace Peliculas
             ofd.InitialDirectory = Directory.GetCurrentDirectory();
             lista = new ObservableCollection<Pelicula>();
             getSamples();
-            //lista.Add(new Pelicula("Fast Furious 9", "A todo gas 9", "Media", "Acción", "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/fast-and-furious-9-poster-1580411801.jpeg"));
-            //lista.Add(new Pelicula("Animales Fantásticos", "Los crímenes de Grindelwald", "Media", "Acción", "https://pics.filmaffinity.com/Animales_fant_sticos_Los_cr_menes_de_Grindelwald-693286072-large.jpg"));
             actualTextBlock.Text = "1";
             totalTextBlock.Text = lista.Count.ToString();
             peliculasListBox.DataContext = lista;
@@ -113,13 +111,17 @@ namespace Peliculas
 
         private void addPeliculaButton_Click(object sender, RoutedEventArgs e)
         {
-            string titulo = tituloTextBox.Text;
-            string pista = pistaTextBox.Text;
-            string dificultad = dificultadComboBox.SelectedItem.ToString();
-            string imagen = imagenTextBox.Text;
-            string genero = generoComboBox.SelectedItem.ToString();
-            lista.Add(new Pelicula(titulo, pista, dificultad, genero, imagen));
-            totalTextBlock.Text = lista.Count.ToString();
+            // No logro deshabilitar el botón al tener campos vacíos
+            if (tituloTextBox.Text != "" && pistaTextBox.Text != "" && dificultadComboBox.SelectedItem.ToString() != null && imagenTextBox.Text != "" && generoComboBox.SelectedItem.ToString() != null) 
+            {
+                string titulo = tituloTextBox.Text;
+                string pista = pistaTextBox.Text;
+                string dificultad = dificultadComboBox.SelectedItem.ToString();
+                string imagen = imagenTextBox.Text;
+                string genero = generoComboBox.SelectedItem.ToString();
+                lista.Add(new Pelicula(titulo, pista, dificultad, genero, imagen));
+                totalTextBlock.Text = lista.Count.ToString();
+            }
         }
 
         private void eliminarPeliculaButton_Click(object sender, RoutedEventArgs e)
@@ -151,6 +153,11 @@ namespace Peliculas
                 contenedorJuego.DataContext = lista[actual];
                 actualTextBlock.Text = (actual + 1).ToString();
             }
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            textoPistaTextBlock.Visibility = Visibility.Visible;
         }
     }
 }
