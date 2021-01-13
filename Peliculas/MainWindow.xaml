@@ -148,28 +148,32 @@
                     Value="5" />
         </Style>
 
-        <Style x:Key="estiloAddPeliculaButton"
-               TargetType="Button"
-               BasedOn="{StaticResource estiloButton}">
-            <Setter Property="IsEnabled"
-                    Value="True" />
+        <Style x:Key="estiloAddPeliculaButton" TargetType="Button" BasedOn="{StaticResource estiloButton}">
             <Style.Triggers>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding ElementName=tituloTextBox, Path=Text}"
-                                   Value="" />
-                        <Condition Binding="{Binding ElementName=pistaTextBox, Path=Text}"
-                                   Value="" />
-                        <Condition Binding="{Binding ElementName=imagenTextBox, Path=Text}"
-                                   Value="" />
-                        <Condition Binding="{Binding ElementName=dificultadComboBox, Path=SelectedIndex}"
-                                   Value="-1" />
-                        <Condition Binding="{Binding ElementName=generoComboBox, Path=SelectedIndex}"
-                                   Value="-1" />
-                    </MultiDataTrigger.Conditions>
+                <DataTrigger Binding="{Binding ElementName=tituloTextBox, Path=Text}" Value="">
                     <Setter Property="IsEnabled"
                             Value="False" />
-                </MultiDataTrigger>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=pistaTextBox, Path=Text}"
+                             Value="">
+                    <Setter Property="IsEnabled"
+                            Value="False" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=imagenTextBox, Path=Text}"
+                             Value="">
+                    <Setter Property="IsEnabled"
+                            Value="False" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=dificultadComboBox, Path=SelectedIndex}"
+                             Value="-1">
+                    <Setter Property="IsEnabled"
+                            Value="False" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=generoComboBox, Path=SelectedIndex}"
+                             Value="-1">
+                    <Setter Property="IsEnabled"
+                            Value="False" />
+                </DataTrigger>
             </Style.Triggers>
         </Style>
 

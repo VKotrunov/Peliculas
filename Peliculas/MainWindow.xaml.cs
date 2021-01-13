@@ -27,6 +27,7 @@ namespace Peliculas
         OpenFileDialog ofd;
         ObservableCollection<Pelicula> lista;
         Juego j;
+        ObservableCollection<Pelicula> peliculasPartida;
         enum Generos
         {
             Comedia, Drama, Acción, Terror, CienciaFicción
@@ -112,17 +113,13 @@ namespace Peliculas
 
         private void addPeliculaButton_Click(object sender, RoutedEventArgs e)
         {
-            // No logro deshabilitar el botón al tener campos vacíos
-            if (tituloTextBox.Text != "" && pistaTextBox.Text != "" && dificultadComboBox.SelectedItem.ToString() != null && imagenTextBox.Text != "" && generoComboBox.SelectedItem.ToString() != null) 
-            {
-                string titulo = tituloTextBox.Text;
-                string pista = pistaTextBox.Text;
-                string dificultad = dificultadComboBox.SelectedItem.ToString();
-                string imagen = imagenTextBox.Text;
-                string genero = generoComboBox.SelectedItem.ToString();
-                lista.Add(new Pelicula(titulo, pista, dificultad, genero, imagen));
-                totalTextBlock.Text = lista.Count.ToString();
-            }
+            string titulo = tituloTextBox.Text;
+            string pista = pistaTextBox.Text;
+            string dificultad = dificultadComboBox.SelectedItem.ToString();
+            string imagen = imagenTextBox.Text;
+            string genero = generoComboBox.SelectedItem.ToString();
+            lista.Add(new Pelicula(titulo, pista, dificultad, genero, imagen));
+            totalTextBlock.Text = lista.Count.ToString();
         }
 
         private void eliminarPeliculaButton_Click(object sender, RoutedEventArgs e)
@@ -172,12 +169,18 @@ namespace Peliculas
         {
             if (lista.Count < 5)
                 MessageBox.Show("No se puede empezar partida hasta tener al menos 5 películas", "Información", MessageBoxButton.OK, MessageBoxImage.Information);
-            else 
+            else
             {
                 MessageBox.Show("¡EMPIEZA LA PARTIDA!", "Información", MessageBoxButton.OK, MessageBoxImage.None);
                 j = new Juego(lista);
                 j.EmpiezaJuego();
                 puntosTextBlock.Text = j.GetPuntuacion();
+
+                peliculasPartida = new ObservableCollection<Pelicula>();
+                peliculasPartida = j.GetPeliculas();
+
+                contenedorJuego.DataContext = peliculasPartida[0];
+                totalTextBlock.Text = peliculasPartida.Count.ToString();
             }
         }
     }
