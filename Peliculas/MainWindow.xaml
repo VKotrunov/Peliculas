@@ -10,7 +10,7 @@
         MinWidth="900"
         Height="600"
         Width="900"
-        Icon="icono.ico">
+        Icon="imagenes/icono.ico">
     <Window.Resources>
 
         <local:GeneroConverter x:Key="conversorGenero" />
@@ -242,7 +242,7 @@
                                 HorizontalAlignment="Center">
                         <Image x:Name="anteriorImage"
                                MouseLeftButtonUp="anteriorImage_MouseLeftButtonUp"
-                               Source="arrow.png"
+                               Source="imagenes/arrow.png"
                                Style="{StaticResource flecha}" />
                         <TextBlock x:Name="actualTextBlock"
                                    Text="1"
@@ -257,7 +257,7 @@
                                    Style="{StaticResource paginacionTextBlock}" />
                         <Image x:Name="siguienteImage"
                                MouseLeftButtonUp="siguienteImage_MouseLeftButtonUp"
-                               Source="arrow.png"
+                               Source="imagenes/arrow.png"
                                Style="{StaticResource flecha}"
                                RenderTransformOrigin="0.5,0.5">
                             <Image.RenderTransform>

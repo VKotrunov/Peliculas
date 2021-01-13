@@ -13,21 +13,20 @@ namespace Peliculas
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string ruta = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName; 
             switch ((string)value)
             {
                 case "Comedia":
-                    return Path.Combine(ruta, @"assets/comedia.png");
+                    return "imagenes/comedia.png";
                 case "Drama":
-                    return Path.Combine(ruta, @"assets/drama.png");
+                    return "imagenes/drama.png";
                 case "Acción":
-                    return Path.Combine(ruta, @"assets/accion.png");
+                    return "imagenes/accion.png";
                 case "Terror":
-                    return Path.Combine(ruta, @"assets/terror.png");
+                    return "imagenes/terror.png";
                 case "CienciaFicción":
-                    return Path.Combine(ruta, @"assets/cienciaficcion.png");
+                    return "imagenes/cienciaficcion.png";
                 default:
-                    return "icono.ico";
+                    return "imagenes/icono.ico";
             }
         }
 
