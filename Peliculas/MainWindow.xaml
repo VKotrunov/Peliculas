@@ -150,6 +150,25 @@
             </Style.Triggers>
         </Style>
 
+        <Style TargetType="DockPanel" x:Key="juegoPanel">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Dificultad}" Value="Fácil">
+                    <Setter Property="Background"
+                            Value="LimeGreen" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Dificultad}"
+                             Value="Normal">
+                    <Setter Property="Background"
+                            Value="Orange" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Dificultad}"
+                             Value="Difícil">
+                    <Setter Property="Background"
+                            Value="Red" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        
         <DataTemplate DataType="{x:Type local:Pelicula}">
             <Border BorderThickness="1"
                     BorderBrush="Black"
@@ -169,7 +188,7 @@
     <Grid>
         <TabControl Margin="10">
             <TabItem Header="Jugar">
-                <DockPanel Background="YellowGreen" x:Name="contenedorJuego">
+                <DockPanel x:Name="contenedorJuego" Style="{StaticResource juegoPanel}">
                     <StackPanel Orientation="Horizontal"
                                 DockPanel.Dock="Bottom"
                                 HorizontalAlignment="Center">
@@ -206,8 +225,9 @@
                                        Style="{StaticResource etiquetasTextBlock}"
                                        Margin="40,5,10,5"
                                        DockPanel.Dock="Top" />
-                            <Image Source="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/fast-and-furious-9-poster-1580411801.jpeg"
+                            <Image Source="{Binding Path=Imagen}"
                                    Stretch="UniformToFill"
+                                   Width="270"
                                    Margin="40,5,10,5" />
                         </DockPanel>
                         <StackPanel>
@@ -237,7 +257,7 @@
                             </StackPanel>
                             <CheckBox Content="Ver Pista"
                                       Margin="30,10,10,10" />
-                            <TextBlock Text="ESTO ES EL TEXTO DE LA PISTA"
+                            <TextBlock Text="{Binding Pista}"
                                        Margin="30,10,10,10" />
                             <Image Source="icono.ico"
                                    Margin="0,20,0,10" />
