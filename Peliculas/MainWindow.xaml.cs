@@ -119,11 +119,13 @@ namespace Peliculas
             string imagen = imagenTextBox.Text;
             string genero = generoComboBox.SelectedItem.ToString();
             lista.Add(new Pelicula(titulo, pista, dificultad, genero, imagen));
+            totalTextBlock.Text = lista.Count.ToString();
         }
 
         private void eliminarPeliculaButton_Click(object sender, RoutedEventArgs e)
         {
             lista.Remove((Pelicula)peliculasListBox.SelectedItem);
+            totalTextBlock.Text = lista.Count.ToString();
         }
 
         private void deseleccionarPeliculaButton_Click(object sender, RoutedEventArgs e)

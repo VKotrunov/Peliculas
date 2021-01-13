@@ -12,12 +12,23 @@
         Width="900"
         Icon="icono.ico">
     <Window.Resources>
-        <Style x:Key="etiquetasTextBlock"
-               TargetType="TextBlock">
+
+        <local:GeneroConverter x:Key="conversorGenero" />
+
+        <Style TargetType="TextBlock"
+               x:Key="etiquetasTextBlock">
             <Setter Property="VerticalAlignment"
                     Value="Center" />
             <Setter Property="Margin"
                     Value="10,5,10,5" />
+            <Setter Property="FontSize"
+                    Value="25" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Center" />
+            <Setter Property="Foreground"
+                    Value="White" />
+            <Setter Property="FontWeight"
+                    Value="Bold" />
         </Style>
 
         <Style x:Key="paginacionTextBlock"
@@ -30,6 +41,8 @@
                     Value="Bold" />
             <Setter Property="FontSize"
                     Value="20" />
+            <Setter Property="Foreground"
+                    Value="White" />
         </Style>
 
         <Style TargetType="TextBox">
@@ -152,19 +165,49 @@
 
         <Style TargetType="DockPanel" x:Key="juegoPanel">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=Dificultad}" Value="Fácil">
+                <DataTrigger Binding="{Binding Dificultad}" Value="Fácil">
                     <Setter Property="Background"
                             Value="LimeGreen" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Path=Dificultad}"
+                <DataTrigger Binding="{Binding Dificultad}"
                              Value="Normal">
                     <Setter Property="Background"
                             Value="Orange" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Path=Dificultad}"
+                <DataTrigger Binding="{Binding Dificultad}"
                              Value="Difícil">
                     <Setter Property="Background"
                             Value="Red" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="Image"
+               x:Key="blurImage">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Dificultad}"
+                             Value="Fácil">
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <BlurEffect Radius="10" />
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Dificultad}"
+                             Value="Normal">
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <BlurEffect Radius="20" />
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Dificultad}"
+                             Value="Difícil">
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <BlurEffect Radius="30" />
+                        </Setter.Value>
+                    </Setter>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -225,7 +268,9 @@
                                        Style="{StaticResource etiquetasTextBlock}"
                                        Margin="40,5,10,5"
                                        DockPanel.Dock="Top" />
-                            <Image Source="{Binding Path=Imagen}"
+                            <Image x:Name="imagenPeliculaImage"
+                                   Style="{StaticResource blurImage}"
+                                    Source="{Binding Imagen}"
                                    Stretch="UniformToFill"
                                    Width="270"
                                    Margin="40,5,10,5" />
@@ -233,24 +278,27 @@
                         <StackPanel>
                             <TextBlock Text="Puntuación total"
                                        Style="{StaticResource etiquetasTextBlock}"
-                                       Margin="200,5,0,5" />
+                                       Margin="-100,5,0,0" />
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="PUNTOS"
-                                           Margin="200,10,80,10"
-                                           Background="Red"
-                                           Height="100"
-                                           Width="100"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center" />
+                                <Viewbox Width="230"
+                                         Height="100"
+                                         Stretch="Uniform"
+                                         Margin="100,5,30,10">
+                                    <TextBlock Text="99000"
+                                               Foreground="Cyan" />
+                                </Viewbox>
                                 <Button Content="Nueva partida"
                                         VerticalAlignment="Top"
-                                        Margin="10"
+                                        Margin="10,50,10,10"
                                         Style="{StaticResource estiloButton}" />
                             </StackPanel>
                             <TextBlock Text="Título de la película"
-                                       Margin="30,10,10,0" />
+                                       Margin="30,10,10,0"
+                                       FontSize="18"
+                                       Foreground="White"
+                                       FontWeight="Bold"/>
                             <StackPanel Orientation="Horizontal">
-                                <TextBox Width="300"
+                                <TextBox Width="325"
                                          Margin="30,10,10,10" />
                                 <Button Content="Validar"
                                         Style="{StaticResource estiloButton}" />
@@ -259,9 +307,10 @@
                                       Margin="30,10,10,10" />
                             <TextBlock Text="{Binding Pista}"
                                        Margin="30,10,10,10" />
-                            <Image Source="icono.ico"
-                                   Margin="0,20,0,10" />
-                            <TextBlock Text="Género"
+                            <Image Source="{Binding Genero, Converter={StaticResource conversorGenero}}"
+                                   Margin="0,20,0,0"
+                                   Width="128"/>
+                            <TextBlock Text="{Binding Genero}"
                                        HorizontalAlignment="Center" />
                         </StackPanel>
 
