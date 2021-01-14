@@ -1,32 +1,22 @@
 ﻿using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Peliculas
 {
-    /// <summary>
-    /// Lógica de interacción para MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        const int PUNTOS_ACIERTO_FACIL = 100;
+        const int PUNTOS_ACIERTO_NORMAL = 200;
+        const int PUNTOS_ACIERTO_DIFICIL = 300;
+        int puntosPartida;
+        int aciertos;
         OpenFileDialog ofd;
         ObservableCollection<Pelicula> lista;
-        Juego j;
         ObservableCollection<Pelicula> peliculasPartida;
         enum Generos
         {
@@ -42,24 +32,24 @@ namespace Peliculas
             InitializeComponent();
             ofd = new OpenFileDialog();
             ofd.InitialDirectory = Directory.GetCurrentDirectory();
-            lista = new ObservableCollection<Pelicula>();
             getSamples();
-            actualTextBlock.Text = "1";
-            totalTextBlock.Text = lista.Count.ToString();
-            peliculasListBox.DataContext = lista;
-            generoComboBox.ItemsSource = Enum.GetValues(typeof(Generos));
-            dificultadComboBox.ItemsSource = Enum.GetValues(typeof(Dificultad));
-            contenedorJuego.DataContext = lista;
         }
 
         private void getSamples()
         {
+            lista = new ObservableCollection<Pelicula>();
             using (StreamReader jsonStream = File.OpenText("datos.json"))
             {
                 var json = jsonStream.ReadToEnd();
                 lista = JsonConvert.DeserializeObject<ObservableCollection<Pelicula>>(json);
             }
             peliculasListBox.DataContext = lista;
+            contenedorJuego.DataContext = lista;
+            actualTextBlock.Text = "1";
+            totalTextBlock.Text = lista.Count.ToString();
+            generoComboBox.ItemsSource = Enum.GetValues(typeof(Generos));
+            dificultadComboBox.ItemsSource = Enum.GetValues(typeof(Dificultad));
+            peliculasPartida = lista;
         }
 
         private void cargarJSONButton_Click(object sender, RoutedEventArgs e)
@@ -69,7 +59,6 @@ namespace Peliculas
             try
             {
                 ofd.OpenFile();
-
                 using (StreamReader jsonStream = File.OpenText(ofd.FileName))
                 {
                     var json = jsonStream.ReadToEnd();
@@ -91,9 +80,7 @@ namespace Peliculas
             sfd.ShowDialog();
             string nombreFichero = sfd.FileName;
             if (string.IsNullOrEmpty(nombreFichero))
-            {
                 MessageBox.Show("No se guardó la información", "Información", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
             else
             {
                 string datos = JsonConvert.SerializeObject(lista);
@@ -138,30 +125,41 @@ namespace Peliculas
             int actual = int.Parse(actualTextBlock.Text);
             if (actual > 1)
             {
-                contenedorJuego.DataContext = lista[actual - 2];
+                contenedorJuego.DataContext = peliculasPartida[actual - 2];
                 actualTextBlock.Text = (actual - 1).ToString();
-                textoPistaTextBlock.Visibility = Visibility.Hidden;
-                pistaCheckBox.IsChecked = false;
-                pistaCheckBox.IsEnabled = true;
+                validarTextBox.Text = "";
+                GestionarCheckBox(actual - 2);
             }
         }
 
         private void siguienteImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             int actual = int.Parse(actualTextBlock.Text);
-            if (actual < lista.Count)
+            if (actual < peliculasPartida.Count)
             {
-                contenedorJuego.DataContext = lista[actual];
+                contenedorJuego.DataContext = peliculasPartida[actual];
                 actualTextBlock.Text = (actual + 1).ToString();
-                textoPistaTextBlock.Visibility = Visibility.Hidden;
-                pistaCheckBox.IsChecked = false;
-                pistaCheckBox.IsEnabled = true;
+                validarTextBox.Text = "";
+                GestionarCheckBox(actual);
             }
+        }
+
+        private void GestionarCheckBox(int pos) 
+        {
+            pistaCheckBox.IsChecked = peliculasPartida[pos].PistaVista;
+            // Si la pista está vista, no puede deshabilitar
+            pistaCheckBox.IsEnabled = !peliculasPartida[pos].PistaVista;
+            if (peliculasPartida[pos].PistaVista)
+                textoPistaTextBlock.Visibility = Visibility.Visible;
+            else
+                textoPistaTextBlock.Visibility = Visibility.Hidden;
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             textoPistaTextBlock.Visibility = Visibility.Visible;
+            int actual = int.Parse(actualTextBlock.Text);
+            peliculasPartida[actual-1].PistaVista = true;
             pistaCheckBox.IsEnabled = false;
         }
 
@@ -170,17 +168,77 @@ namespace Peliculas
             if (lista.Count < 5)
                 MessageBox.Show("No se puede empezar partida hasta tener al menos 5 películas", "Información", MessageBoxButton.OK, MessageBoxImage.Information);
             else
+                EmpiezaJuego();
+        }
+
+        private void SeleccionaPeliculas()
+        {
+            peliculasPartida = new ObservableCollection<Pelicula>();
+            // Para generar una nueva referencia y evitar tocar la lista original
+            // Con esto evito tener que recorrer la lista original y resetear los valores a cada vez que inicio el juego
+            ObservableCollection<Pelicula> listaAux = new ObservableCollection<Pelicula>();
+            foreach (Pelicula p in lista)
+                listaAux.Add(new Pelicula(p.Titulo, p.Pista, p.Dificultad, p.Genero, p.Imagen));
+            Random seed = new Random();
+            while (peliculasPartida.Count < 5)
             {
-                MessageBox.Show("¡EMPIEZA LA PARTIDA!", "Información", MessageBoxButton.OK, MessageBoxImage.None);
-                j = new Juego(lista);
-                j.EmpiezaJuego();
-                puntosTextBlock.Text = j.GetPuntuacion();
+                int posicionPelicula = seed.Next(0, listaAux.Count);
+                if (!peliculasPartida.Contains(listaAux[posicionPelicula])) 
+                    peliculasPartida.Add(listaAux[posicionPelicula]);
+            }
+        }
+        private void EmpiezaJuego() 
+        {
+            MessageBox.Show("¡EMPIEZA LA PARTIDA!", "Información", MessageBoxButton.OK, MessageBoxImage.None);
+            SeleccionaPeliculas();
+            puntosPartida = 0;
+            puntosTextBlock.Text = puntosPartida.ToString();
+            textoPistaTextBlock.Visibility = Visibility.Hidden;
+            pistaCheckBox.IsChecked = false;
+            pistaCheckBox.IsEnabled = true;
+            contenedorJuego.DataContext = peliculasPartida[0];
+            actualTextBlock.Text = "1";
+            totalTextBlock.Text = peliculasPartida.Count.ToString();
+            aciertos = 0;
+        }
 
-                peliculasPartida = new ObservableCollection<Pelicula>();
-                peliculasPartida = j.GetPeliculas();
+        private void validarButton_Click(object sender, RoutedEventArgs e)
+        {
+            int actual = int.Parse(actualTextBlock.Text)-1;
+            string titulo = peliculasPartida[actual].Titulo.ToLower().Trim();
+            string intento = validarTextBox.Text.ToLower().Trim();
+            if (titulo.Equals(intento)) 
+            {
+                peliculasPartida[actual].Resuelta = true;
+                Puntuar(actual);
+                aciertos++;
+                CompruebaFinal();
+            }
+        }
 
-                contenedorJuego.DataContext = peliculasPartida[0];
-                totalTextBlock.Text = peliculasPartida.Count.ToString();
+        private void Puntuar(int pos) 
+        {
+            string dificultad = peliculasPartida[pos].Dificultad;
+            bool pistaVista = peliculasPartida[pos].PistaVista;
+            int puntosGanados = 0;
+            if (dificultad.Equals("Fácil"))
+                puntosGanados = PUNTOS_ACIERTO_FACIL;
+            else if(dificultad.Equals("Normal"))
+                puntosGanados = PUNTOS_ACIERTO_NORMAL;
+            else if (dificultad.Equals("Difícil"))
+                puntosGanados = PUNTOS_ACIERTO_DIFICIL;
+            if (pistaVista)
+                puntosGanados /= 2;
+            puntosPartida += puntosGanados;
+            puntosTextBlock.Text = puntosPartida.ToString();
+        }
+        private void CompruebaFinal() 
+        {
+            if (aciertos == 5)
+            {
+                MessageBox.Show("¡GANASTE! \nHas hecho un total de "+puntosPartida+" puntos.", "Fin de la partida", MessageBoxButton.OK, MessageBoxImage.None);
+                if (MessageBox.Show("¿Desea volver a jugar?", "Jugar otra vez", MessageBoxButton.YesNo, MessageBoxImage.None) == MessageBoxResult.Yes)
+                    EmpiezaJuego();
             }
         }
     }

@@ -76,6 +76,34 @@ namespace Peliculas
             }
         }
 
+        private bool _pistaVista;
+        public bool PistaVista
+        {
+            get => _pistaVista;
+            set
+            {
+                if (_pistaVista != value)
+                {
+                    _pistaVista = value;
+                    NotifyPropertyChanged("PistaVista");
+                }
+            }
+        }
+
+        private bool _resuelta;
+        public bool Resuelta
+        {
+            get => _resuelta;
+            set
+            {
+                if (_resuelta != value)
+                {
+                    _resuelta = value;
+                    NotifyPropertyChanged("Resuelta");
+                }
+            }
+        }
+
         public Pelicula(string titulo, string pista, string dificultad, string genero, string imagen)
         {
             Titulo = titulo;
@@ -83,6 +111,8 @@ namespace Peliculas
             Dificultad = dificultad;
             Genero = genero;
             Imagen = imagen;
+            PistaVista = false;
+            Resuelta = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
